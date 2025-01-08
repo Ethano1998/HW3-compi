@@ -84,6 +84,9 @@ class GlobalSymbolTable {
     };
 
     void addTable(std::shared_ptr<SymbolTable>(table)) {
+        std::shared_ptr<SymbolTable> precedent_table = tables.back();
+        int old_offset = precedent_table->get_offset();
+        table->set_offset(old_offset);
         tables.push_back(table);
     }
     
