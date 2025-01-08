@@ -33,6 +33,9 @@ class SymbolTable {
     std::vector<std::shared_ptr<SymbolEntry>> entries;
 
     public:
+
+    int scope_offset = 0;
+
     SymbolTable() = default; 
     
     std::shared_ptr<SymbolEntry> findEntry(std::string name) {
@@ -66,6 +69,7 @@ class SymbolTable {
     void addVar(std::string name, std::string type) {
         entries.push_back(std::make_shared<VarSymbolEntry>(name, type, global_offset));
         global_offset++;
+        scope_offset++;
     }
 
     void addFunc(std::string name, std::vector<std::string> paramTypes, std::string returnType) {
@@ -100,7 +104,10 @@ class GlobalSymbolTable {
 
     std::shared_ptr<SymbolTable> popTable() {
         auto table = tables.back();
+        int sub_offset = table->scope_offset;
         tables.pop_back();
+        auto dad_table= tables.back();
+        dad_table->scope_offset = dad_table->scope_offset - sub_offset;
         return table;
     }
 
