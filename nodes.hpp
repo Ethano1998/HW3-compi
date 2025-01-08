@@ -57,6 +57,8 @@ namespace ast {
 
     /* Base class for all statements */
     class Statement : virtual public Node {
+    public:
+        ast::BuiltInType return_type;
     };
 
     /* Number literal */
@@ -312,8 +314,6 @@ namespace ast {
     public:
         // List of statements
         std::vector<std::shared_ptr<Statement>> statements;
-
-        std::string func_id;
 
         // Constructor that receives no statements
         Statements() = default;
