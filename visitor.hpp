@@ -112,6 +112,8 @@ private:
 
 public:
 
+    bool from_funcdecl = false;
+
     enum class Context {
         DECLARATION,
         REFERENCE_FUNC,
