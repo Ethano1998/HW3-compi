@@ -52,6 +52,7 @@ namespace ast {
     class Exp : virtual public Node {
     public:
         Exp() = default;
+        BuiltInType type;
     };
 
     /* Base class for all statements */
@@ -128,6 +129,8 @@ namespace ast {
         // Name of the identifier
         std::string value;
 
+        BuiltInType type = VOID;
+
         // Constructor that receives a C-style string that represents the identifier
         explicit ID(const char *str);
 
@@ -145,6 +148,8 @@ namespace ast {
         std::shared_ptr<Exp> right;
         // Operation
         BinOpType op;
+
+        BuiltInType type = INT;
 
         // Constructor that receives the left and right operands and the operation
         BinOp(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right, BinOpType op);
@@ -164,6 +169,8 @@ namespace ast {
         // Operation
         RelOpType op;
 
+        BuiltInType type = BOOL;
+
         // Constructor that receives the left and right operands and the operation
         RelOp(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right, RelOpType op);
 
@@ -177,6 +184,8 @@ namespace ast {
     public:
         // Operand
         std::shared_ptr<Exp> exp;
+
+        BuiltInType type = BOOL;
 
         // Constructor that receives the operand
         explicit Not(std::shared_ptr<Exp> exp);
@@ -194,6 +203,8 @@ namespace ast {
         // Right operand
         std::shared_ptr<Exp> right;
 
+        BuiltInType type = BOOL;
+
         // Constructor that receives the left and right operands
         And(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
 
@@ -209,6 +220,8 @@ namespace ast {
         std::shared_ptr<Exp> left;
         // Right operand
         std::shared_ptr<Exp> right;
+
+        BuiltInType type = BOOL;
 
         // Constructor that receives the left and right operands
         Or(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
@@ -239,6 +252,8 @@ namespace ast {
         std::shared_ptr<Exp> exp;
         // Target type
         std::shared_ptr<Type> target_type;
+
+        BuiltInType type = VOID;
 
         // Constructor that receives the expression and the target type
         Cast(std::shared_ptr<Exp> exp, std::shared_ptr<Type> type);
@@ -278,6 +293,8 @@ namespace ast {
         std::shared_ptr<ID> func_id;
         // List of arguments as expressions
         std::shared_ptr<ExpList> args;
+
+        BuiltInType type = VOID;
 
         // Constructor that receives the function identifier and the list of arguments
         Call(std::shared_ptr<ID> func_id, std::shared_ptr<ExpList> args);

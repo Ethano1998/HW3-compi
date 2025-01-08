@@ -152,7 +152,7 @@ public:
                 return "unknown";
         }
     }
-    bool check_assign(ast::Exp &node);
+    ast::BuiltInType check_assign(std::shared_ptr<ast::Exp> &node);
 
     void visit(ast::Num &node) override;
 
