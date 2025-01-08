@@ -39,6 +39,9 @@ void SemanticVisitor::visit(ast::FuncDecl &node){
     functable->addFunc(node.id->value,parameters_name,returnType);
     std::shared_ptr<SymbolTable> func_table = std::make_shared<SymbolTable>() ;
     globalSymbolTable.addTable(func_table);
+    node.return_type->accept(*this);
+    node.id->accept(*this);
+    node.formals->accept(*this);
     node.body->accept(*this);
     globalSymbolTable.popTable();
     scopePrinter.endScope();
