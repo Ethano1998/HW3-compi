@@ -63,6 +63,7 @@ void SemanticVisitor::visit(ast::FuncDecl &node){
     std::shared_ptr<SymbolTable> func_table = std::make_shared<SymbolTable>() ;
     globalSymbolTable.addTable(func_table);
     from_funcdecl = true;
+    node.body->func_id = node.id->value;
 
     //route du visitor vers statement pour la scope de la function
     node.formals->accept(*this);

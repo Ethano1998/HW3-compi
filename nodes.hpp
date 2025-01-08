@@ -313,6 +313,8 @@ namespace ast {
         // List of statements
         std::vector<std::shared_ptr<Statement>> statements;
 
+        std::string func_id;
+
         // Constructor that receives no statements
         Statements() = default;
 
