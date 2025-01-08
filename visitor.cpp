@@ -207,3 +207,13 @@ void SemanticVisitor::visit(ast::Continue &node){
         output::errorUnexpectedContinue(node.line);
 }
 
+void SemanticVisitor::visit(ast::Call &node){
+    current_context = Context::REFERENCE_FUNC;
+    node.func_id->accept(*this);
+    std::shared_ptr<SymbolTable> functionTable = globalSymbolTable.getFunctionTable();
+    std::shared_ptr<FuncSymbolEntry> entry = std::dynamic_pointer_cast<FuncSymbolEntry>(functionTable->findEntry(node.func_id->value));
+    std::vector<std::string> paramTypes = entry->paramTypes;
+    std::vector<std::shared_ptr<ast::Exp>> args = node.args->exps;
+    current_context = Context::REFERENCE_VAR;
+    node.args->accept(*this);
+}
