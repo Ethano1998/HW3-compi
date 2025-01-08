@@ -1,5 +1,8 @@
 #include "visitor.hpp"
 
+ast::BuiltInType check_assign(std::shared_ptr<ast::Exp> &node){
+    return node->type;
+}
 
 void SemanticVisitor::visit(ast::Funcs &node){
     //appel du visitor sur toute les functions pour les declarer
@@ -91,7 +94,7 @@ void SemanticVisitor::visit(ast::ID &node){
             std::shared_ptr<SymbolTable> Table = globalSymbolTable.getTable();
 
             //verification si la function est declaree en tant que variable
-            if(std::dynamic_pointer_cast<VarSymbolEntry>(Table->findEntry(node.value)))
+            if(std::dynamic_pointer_cast<VarSymbolEntry>(globalSymbolTable.findEntry(node.value)))
                 output::errorDefAsVar(node.line,node.value);
 
             //recuperation de la table des functions
@@ -164,6 +167,9 @@ void SemanticVisitor::visit(ast::VarDecl &node){
     current_context = Context::DECLARATION;
     node.id->accept(*this);
     node.type->accept(*this);
+    if(node.init_exp){
+        ast::BuiltInType type_check = check_assign(node.init_exp);
+    }
     
 
 
@@ -179,7 +185,9 @@ void SemanticVisitor::visit(ast::If &node){
     scopePrinter.endScope();
     globalSymbolTable.popTable();
     if(node.otherwise){
+        scopePrinter.beginScope();
         node.otherwise->accept(*this);
+        scopePrinter.endScope();
     }
 }
 
