@@ -1,4 +1,6 @@
 #include "visitor.hpp"
+#include "nodes.hpp"
+#include "output.hpp"
 
 ast::BuiltInType check_assign(std::shared_ptr<ast::Exp> &node){
     return node->type;
@@ -168,12 +170,22 @@ void SemanticVisitor::visit(ast::VarDecl &node){
     node.id->accept(*this);
     node.type->accept(*this);
     if(node.init_exp){
+        node.init_exp->accept(*this);
         ast::BuiltInType type_check = check_assign(node.init_exp);
+        if(node.type->type != type_check)
+            output::errorMismatch(node.line);
     }
-    
+}
 
-
-
+void SemanticVisitor::visit(ast::Assign &node){
+    current_context = Context::REFERENCE_VAR;
+    node.id->accept(*this);
+    node.exp->accept(*this);
+    ast::BuiltInType type_check = check_assign(node.exp);
+    std::string check = toString(type_check);
+    auto variable = std::dynamic_pointer_cast<VarSymbolEntry>(globalSymbolTable.findEntry(node.id->value));
+    if(check != variable->type)
+        output::errorMismatch(node.line);   
 }
 
 void SemanticVisitor::visit(ast::If &node){

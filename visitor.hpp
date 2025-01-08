@@ -5,9 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "nodes.hpp"
 #include "symbolTable.hpp"
-#include "output.hpp"
 
 namespace ast {
     class Num;
@@ -36,6 +34,10 @@ namespace ast {
     class Formals;
     class FuncDecl;
     class Funcs;
+}
+
+namespace output{
+    class ScopePrinter;
 }
 
 class Visitor {

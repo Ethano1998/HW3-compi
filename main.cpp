@@ -1,4 +1,5 @@
 #include "visitor.hpp"
+#include "nodes.hpp"
 
 extern int yyparse();
 
