@@ -64,6 +64,8 @@ namespace ast {
         // Value of the number
         int value;
 
+        BuiltInType type = INT;
+
         // Constructor that receives a C-style string that represents the number
         explicit Num(const char *str);
 
@@ -77,6 +79,8 @@ namespace ast {
     public:
         // Value of the number
         int value;
+
+        BuiltInType type = BYTE;
 
         // Constructor that receives a C-style (including b character) string that represents the number
         explicit NumB(const char *str);
@@ -92,6 +96,8 @@ namespace ast {
         // Value of the string
         std::string value;
 
+        BuiltInType type = STRING;
+
         // Constructor that receives a C-style string that represents the string *including quotes*
         explicit String(const char *str);
 
@@ -105,6 +111,8 @@ namespace ast {
     public:
         // Value of the boolean
         bool value;
+
+        BuiltInType type = BOOL;
 
         // Constructor that receives the boolean value
         explicit Bool(bool value);
