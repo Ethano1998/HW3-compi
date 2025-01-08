@@ -28,11 +28,12 @@ public:
 };
 
 class SymbolTable {
-    int offset = 0;
+    int global_offset = 0;
+    int param_offset = 0;
     std::vector<std::shared_ptr<SymbolEntry>> entries;
 
     public:
-    SymbolTable() = default;
+    SymbolTable() = default; 
     
     std::shared_ptr<SymbolEntry> findEntry(std::string name) {
         for (auto entry : entries) {
@@ -49,9 +50,22 @@ class SymbolTable {
         return nullptr;
     }
 
+    void addParam(std::string name, std::string type){
+        entries.push_back(std::make_shared<VarSymbolEntry>(name, type, param_offset-1));
+        param_offset --;
+    }
+
+    int get_offset(){
+        return global_offset;
+    }
+
+    void set_offset(int offset){
+        global_offset = global_offset + offset;
+    }
+
     void addVar(std::string name, std::string type) {
-        entries.push_back(std::make_shared<VarSymbolEntry>(name, type, offset));
-        offset++;
+        entries.push_back(std::make_shared<VarSymbolEntry>(name, type, global_offset));
+        global_offset++;
     }
 
     void addFunc(std::string name, std::vector<std::string> paramTypes, std::string returnType) {
@@ -69,7 +83,7 @@ class GlobalSymbolTable {
         tables.push_back(table);
     };
 
-    void addTable(std::shared_ptr<SymbolTable> table) {
+    void addTable(std::shared_ptr<SymbolTable>(table)) {
         tables.push_back(table);
     }
     

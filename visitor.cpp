@@ -1,6 +1,7 @@
 #include "visitor.hpp"
 
 
+
 void SemanticVisitor::visit(ast::Funcs &node){
     //appel du visitor sur toute les functions pour les declarer
     declaration_function = true;
@@ -76,6 +77,7 @@ void SemanticVisitor::visit(ast::FuncDecl &node){
     globalSymbolTable.addTable(func_table);
 
     //route du visitor vers statement pour la scope de la function
+    node.formals->accept(*this);
     node.body->accept(*this);
 
     //supression de la table et fin du scope de la function
@@ -101,7 +103,7 @@ void SemanticVisitor::visit(ast::Type &node){
 
 void SemanticVisitor::visit(ast::ID &node){
     switch(current_context){
-        case Context::DECLARATION :
+        case Context::DECLARATION : {
             //recuperation de la table dans symbol table
             std::shared_ptr<SymbolTable> Table = globalSymbolTable.getTable();
 
@@ -109,18 +111,60 @@ void SemanticVisitor::visit(ast::ID &node){
             if(Table->findEntry(node.value))
                 output::errorDef(node.line,node.value);
             break;
+        }
+        case Context::REFERENCE_FUNC :{
+            //recuperation de la table dans symbol table
+            std::shared_ptr<SymbolTable> Table = globalSymbolTable.getTable();
 
-        case Context::REFERENCE_FUNC :
+            //verification si la function est declaree en tant que variable
+            if(std::dynamic_pointer_cast<VarSymbolEntry>(Table->findEntry(node.value)))
+                output::errorDefAsVar(node.line,node.value);
+
             //recuperation de la table des functions
             std::shared_ptr<SymbolTable> functionTable = globalSymbolTable.getFunctionTable();
             
             //verification si la function est declaree
-            if(!functionTable)
+            if(!(functionTable->findEntry(node.value)))
                 output::errorUndefFunc(node.line,node.value);
-
-            //verification si on utilise un ID de variable pour la function
-            if(functionTable)   
+            break;
+        }
+        case Context::REFERENCE_VAR :{
+            //recuperation de la table des functions
+            std::shared_ptr<SymbolTable> functionTable = globalSymbolTable.getFunctionTable();
             
+            //verification si la variable est declaree en tant que fonction
+            if(std::dynamic_pointer_cast<FuncSymbolEntry>(functionTable->findEntry(node.value)))
+                output::errorDefAsFunc(node.line,node.value);
+
+            //recuperation de la table dans symbol table
+            std::shared_ptr<SymbolTable> Table = globalSymbolTable.getTable();
+
+            //verification si variable est declaree
+            if(!(Table->findEntry(node.value)))
+                output::errorUndef(node.line,node.value);
+            break;    
+        }       
     }
+}
+
+void SemanticVisitor::visit(ast::Formals &node){
+    if(declaration_function){
+        for(const auto &formal : node.formals){
+            std::string doublon = formal->id->value;
+            for(const auto &check : node.formals){
+                if(check->id->value == doublon && check != formal)
+                    output::errorDef(check->id->line,doublon);
+            }
+            formal->type->accept(*this);
+        }
+    }
+    else{
+        for(const auto &formal : node.formals){
+            formal->accept(*this);
+        }
+    }
+}
+
+void SemanticVisitor::visit(ast::Formal &node){
     
 }
