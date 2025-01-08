@@ -1,11 +1,11 @@
-#include "visitor.hpp"
+#include "SemanticVisitor.hpp"
 #include "nodes.hpp"
 
 extern int yyparse();
 
 extern std::shared_ptr<ast::Node> program;
 
-main(){
+int main(){
     
     yyparse();
 

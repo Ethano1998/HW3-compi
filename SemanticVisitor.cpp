@@ -1,8 +1,7 @@
-#include "visitor.hpp"
-#include "nodes.hpp"
 #include "output.hpp"
+#include "SemanticVisitor.hpp"
 
-ast::BuiltInType check_assign(std::shared_ptr<ast::Exp> &node){
+ast::BuiltInType SemanticVisitor::check_assign(std::shared_ptr<ast::Exp> &node){
     return node->type;
 }
 
