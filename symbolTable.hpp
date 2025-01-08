@@ -72,6 +72,10 @@ class GlobalSymbolTable {
     void addTable(std::shared_ptr<SymbolTable> table) {
         tables.push_back(table);
     }
+    
+    std::shared_ptr<SymbolTable> getFunctionTable(){
+        return tables.front();
+    }
 
     std::shared_ptr<SymbolTable> getTable() {
         return tables.back();

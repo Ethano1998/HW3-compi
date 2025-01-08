@@ -111,11 +111,26 @@ private:
     */
 
 public:
+
+    enum class Context {
+        DECLARATION,
+        REFERENCE_FUNC,
+        REFERENCE_VAR
+    };
+
+    bool declaration_function;
+    
+    Context current_context;
+
     output::ScopePrinter scopePrinter; 
 
     GlobalSymbolTable globalSymbolTable;
 
     SemanticVisitor();
+
+    void setContext(Context context){
+        current_context = context;
+    }
 
     void visit(ast::Num &node) override;
 
