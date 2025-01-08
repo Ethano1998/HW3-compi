@@ -128,6 +128,8 @@ public:
 
     GlobalSymbolTable globalSymbolTable;
 
+    bool is_loop = false;
+
     SemanticVisitor();
 
     void setContext(Context context){

@@ -172,10 +172,12 @@ void SemanticVisitor::visit(ast::VarDecl &node){
 
 void SemanticVisitor::visit(ast::If &node){
     scopePrinter.beginScope();
-    std::shared_ptr<SymbolTable> table = std::make_shared<SymbolTable>() ;
+    std::shared_ptr<SymbolTable> table = std::make_shared<SymbolTable>();
     globalSymbolTable.addTable(table);
     node.condition->accept(*this);  //need to check if there is no problem with the condition
+    is_loop = true;
     node.then->accept(*this);
+    is_loop = false;
     scopePrinter.endScope();
     globalSymbolTable.popTable();
     if(node.otherwise){
@@ -188,8 +190,20 @@ void SemanticVisitor::visit(ast::While &node){
     std::shared_ptr<SymbolTable> table = std::make_shared<SymbolTable>() ;
     globalSymbolTable.addTable(table);
     node.condition->accept(*this);  //need to check if there is no problem with the condition
+    is_loop = true;
     node.body->accept(*this);
+    is_loop = false;
     scopePrinter.endScope();
     globalSymbolTable.popTable();
+}
+
+void SemanticVisitor::visit(ast::Break &node){
+    if(!is_loop)
+        output::errorUnexpectedBreak(node.line);
+}
+
+void SemanticVisitor::visit(ast::Continue &node){
+    if(!is_loop)
+        output::errorUnexpectedContinue(node.line);
 }
 
