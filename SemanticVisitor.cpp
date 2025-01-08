@@ -63,6 +63,7 @@ void SemanticVisitor::visit(ast::FuncDecl &node){
     std::shared_ptr<SymbolTable> func_table = std::make_shared<SymbolTable>() ;
     globalSymbolTable.addTable(func_table);
     from_funcdecl = true;
+    node.body->return_type= node.return_type->type;
 
     //route du visitor vers statement pour la scope de la function
     node.formals->accept(*this);
@@ -153,11 +154,13 @@ void SemanticVisitor::visit(ast::Statements &node){
     if(from_funcdecl){
         from_funcdecl = false;
         for(const auto &statement : node.statements){
+            statement->return_type = node.return_type;
             statement->accept(*this);
         }
     } else{
         scopePrinter.beginScope();
         for(const auto &statement : node.statements){
+            statement->return_type = node.return_type;
             statement->accept(*this);
         }
         scopePrinter.endScope();
@@ -193,6 +196,7 @@ void SemanticVisitor::visit(ast::If &node){
     globalSymbolTable.addTable(table);
     node.condition->accept(*this);  //need to check if there is no problem with the condition
     is_loop = true;
+    node.then->return_type = node.return_type;
     node.then->accept(*this);
     is_loop = false;
     scopePrinter.endScope();
@@ -201,6 +205,7 @@ void SemanticVisitor::visit(ast::If &node){
         scopePrinter.beginScope();
         std::shared_ptr<SymbolTable> table = std::make_shared<SymbolTable>();
         globalSymbolTable.addTable(table);
+        node.otherwise->return_type = node.return_type;
         node.otherwise->accept(*this);
         scopePrinter.endScope();
         globalSymbolTable.popTable();
@@ -213,6 +218,7 @@ void SemanticVisitor::visit(ast::While &node){
     globalSymbolTable.addTable(table);
     node.condition->accept(*this);  //need to check if there is no problem with the condition
     is_loop = true;
+    node.body->return_type = node.return_type;
     node.body->accept(*this);
     is_loop = false;
     scopePrinter.endScope();

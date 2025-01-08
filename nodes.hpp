@@ -57,6 +57,8 @@ namespace ast {
 
     /* Base class for all statements */
     class Statement : virtual public Node {
+    public:
+        ast::BuiltInType return_type;
     };
 
     /* Number literal */
