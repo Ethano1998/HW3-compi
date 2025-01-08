@@ -200,8 +200,11 @@ void SemanticVisitor::visit(ast::If &node){
     globalSymbolTable.popTable();
     if(node.otherwise){
         scopePrinter.beginScope();
+        std::shared_ptr<SymbolTable> table = std::make_shared<SymbolTable>();
+        globalSymbolTable.addTable(table);
         node.otherwise->accept(*this);
         scopePrinter.endScope();
+        globalSymbolTable.popTable();
     }
 }
 
@@ -227,3 +230,19 @@ void SemanticVisitor::visit(ast::Continue &node){
         output::errorUnexpectedContinue(node.line);
 }
 
+void SemanticVisitor::visit(ast::Call &node){
+    current_context = Context::REFERENCE_FUNC;
+    node.func_id->accept(*this);
+    std::shared_ptr<SymbolTable> functionTable = globalSymbolTable.getFunctionTable();
+    std::shared_ptr<FuncSymbolEntry> entry = std::dynamic_pointer_cast<FuncSymbolEntry>(functionTable->findEntry(node.func_id->value));
+    std::string returnType = entry->returnType;
+    node.type = toBuiltInType(returnType);
+    //now we re checking the types of the arguments
+    for(auto &arg : node.args->exps){
+        ast::BuiltInType type_check = check_assign(arg);
+    }
+    std::vector<std::string> paramTypes = entry->paramTypes;
+    std::vector<std::shared_ptr<ast::Exp>> args = node.args->exps;
+    current_context = Context::REFERENCE_VAR;
+    node.args->accept(*this);
+}

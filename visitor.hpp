@@ -154,6 +154,21 @@ public:
                 return "unknown";
         }
     }
+
+    ast::BuiltInType toBuiltInType(const std::string &type) {
+        if (type == "int") {
+            return ast::BuiltInType::INT;
+        } else if (type == "bool") {
+            return ast::BuiltInType::BOOL;
+        } else if (type == "byte") {
+            return ast::BuiltInType::BYTE;
+        } else if (type == "void") {
+            return ast::BuiltInType::VOID;
+        } else if (type == "string") {
+            return ast::BuiltInType::STRING;
+        }
+    }
+    
     ast::BuiltInType check_assign(std::shared_ptr<ast::Exp> &node);
 
     void visit(ast::Num &node) override;
