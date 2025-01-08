@@ -246,3 +246,16 @@ void SemanticVisitor::visit(ast::Call &node){
             output::errorPrototypeMismatch(node.line,node.func_id->value,expectedtypes);
     }
 }
+
+void SemanticVisitor::visit(ast::Return &node){
+    if(!node.exp){
+        if(node != toString(ast::BuiltInType::VOID))
+            output::errorMismatch(node.line);
+        ast::BuiltInType type_check = check_assign(node.exp);
+        std::string check = toString(type_check);
+        if(check != toString(node.type))
+            output::errorMismatch(node.line);
+    }
+
+    
+}
