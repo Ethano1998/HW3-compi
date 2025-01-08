@@ -58,6 +58,7 @@ void SemanticVisitor::visit(ast::FuncDecl &node){
     //creation de la table pour le scope de la function
     std::shared_ptr<SymbolTable> func_table = std::make_shared<SymbolTable>() ;
     globalSymbolTable.addTable(func_table);
+    from_funcdecl = true;
 
     //route du visitor vers statement pour la scope de la function
     node.formals->accept(*this);
@@ -145,17 +146,24 @@ void SemanticVisitor::visit(ast::Formal &node){
 }
 
 void SemanticVisitor::visit(ast::Statements &node){
-    for(const auto &statement : node.statements){
-        statement->accept(*this);
-    }
+    if(from_funcdecl){
+        from_funcdecl = false;
+        for(const auto &statement : node.statements){
+            statement->accept(*this);
+        }
+    } else{
+        scopePrinter.beginScope();
+        for(const auto &statement : node.statements){
+            statement->accept(*this);
+        }
+        scopePrinter.endScope();
+    }    
 }
 
 void SemanticVisitor::visit(ast::VarDecl &node){
     current_context = Context::DECLARATION;
     node.id->accept(*this);
     node.type->accept(*this);
-    if(node.init_exp)
-        if
     
 
 
