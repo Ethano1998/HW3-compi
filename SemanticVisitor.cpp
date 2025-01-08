@@ -237,11 +237,12 @@ void SemanticVisitor::visit(ast::Call &node){
     std::string returnType = entry->returnType;
     node.type = toBuiltInType(returnType);
     //now we re checking the types of the arguments
-    for(auto &arg : node.args->exps){
-        ast::BuiltInType type_check = check_assign(arg);
-    }
-    std::vector<std::string> paramTypes = entry->paramTypes;
-    std::vector<std::shared_ptr<ast::Exp>> args = node.args->exps;
+    std::vector<std::string> expectedtypes = entry->paramTypes;
+    std::vector<std::shared_ptr<ast::Exp>> types = node.args->exps;
     current_context = Context::REFERENCE_VAR;
     node.args->accept(*this);
+    for(int i = 0; i < expectedtypes.size(); i++){
+        if(expectedtypes[i] != toString(types[i]->type))
+            output::errorPrototypeMismatch(node.line,node.func_id->value,expectedtypes);
+    }
 }
