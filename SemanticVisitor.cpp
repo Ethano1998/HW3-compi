@@ -252,3 +252,7 @@ void SemanticVisitor::visit(ast::Call &node){
             output::errorPrototypeMismatch(node.line,node.func_id->value,expectedtypes);
     }
 }
+
+void SemanticVisitor::visit(ast::BinOp &node){
+    
+}
