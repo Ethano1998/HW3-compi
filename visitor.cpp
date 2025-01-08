@@ -27,28 +27,12 @@ void SemanticVisitor::visit(ast::FuncDecl &node){
         //casting des parametres en string 
         for(const auto &params : node.formals->formals ){
         parameters.push_back(params->type->type);
-        switch(params->type->type){
-            case ast::BuiltInType::VOID : parameters_name.push_back("void"); break;
-            case ast::BuiltInType::BOOL : parameters_name.push_back("bool"); break;
-            case ast::BuiltInType::BYTE : parameters_name.push_back("byte"); break;
-            case ast::BuiltInType::INT  : parameters_name.push_back("int"); break;
-            case ast::BuiltInType::STRING : parameters_name.push_back("string"); break;
-            default : parameters_name.push_back("unknown"); break;
-        }
-
+        parameters_name.push_back(toString(params->type->type));
         }
 
         //casting du return type en string
-        std::string returnType;
-        switch (node.return_type->type)
-        {
-        case ast::BuiltInType::VOID : returnType = "void"; break;
-        case ast::BuiltInType::BOOL : returnType = "bool"; break;
-        case ast::BuiltInType::BYTE : returnType = "byte"; break;
-        case ast::BuiltInType::INT  : returnType = "int"; break;
-        case ast::BuiltInType::STRING : returnType = "string"; break;
-        default : returnType = "unknown"; break;
-        }
+        std::string returnType = toString(node.return_type->type);
+     
 
         //definition du contexte
         setContext(Context::DECLARATION);
@@ -104,11 +88,9 @@ void SemanticVisitor::visit(ast::Type &node){
 void SemanticVisitor::visit(ast::ID &node){
     switch(current_context){
         case Context::DECLARATION : {
-            //recuperation de la table dans symbol table
-            std::shared_ptr<SymbolTable> Table = globalSymbolTable.getTable();
 
             //verification si la function est deja declaree
-            if(Table->findEntry(node.value))
+            if(globalSymbolTable.findEntry(node.value))
                 output::errorDef(node.line,node.value);
             break;
         }
@@ -166,5 +148,6 @@ void SemanticVisitor::visit(ast::Formals &node){
 }
 
 void SemanticVisitor::visit(ast::Formal &node){
-    
+    auto table = globalSymbolTable.getTable();
+    table->addParam(node.id->value,toString(node.type->type));
 }

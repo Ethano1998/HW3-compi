@@ -119,7 +119,7 @@ public:
     };
 
     bool declaration_function;
-    
+
     Context current_context;
 
     output::ScopePrinter scopePrinter; 
@@ -130,6 +130,23 @@ public:
 
     void setContext(Context context){
         current_context = context;
+    }
+
+    std::string toString(ast::BuiltInType type) {
+        switch (type) {
+            case ast::BuiltInType::INT:
+                return "int";
+            case ast::BuiltInType::BOOL:
+                return "bool";
+            case ast::BuiltInType::BYTE:
+                return "byte";
+            case ast::BuiltInType::VOID:
+                return "void";
+            case ast::BuiltInType::STRING:
+                return "string";
+            default:
+                return "unknown";
+        }
     }
 
     void visit(ast::Num &node) override;
