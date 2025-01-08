@@ -148,6 +148,7 @@ public:
                 return "unknown";
         }
     }
+    bool check_assign(ast::Exp &node);
 
     void visit(ast::Num &node) override;
 

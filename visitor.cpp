@@ -1,7 +1,6 @@
 #include "visitor.hpp"
 
 
-
 void SemanticVisitor::visit(ast::Funcs &node){
     //appel du visitor sur toute les functions pour les declarer
     declaration_function = true;
@@ -72,17 +71,9 @@ void SemanticVisitor::visit(ast::FuncDecl &node){
 
 void SemanticVisitor::visit(ast::Type &node){
     //verification du type
-    switch(node.type){
-        case ast::BuiltInType::VOID : 
-        case ast::BuiltInType::BOOL : 
-        case ast::BuiltInType::BYTE : 
-        case ast::BuiltInType::INT  : 
-        case ast::BuiltInType::STRING :
-            break; 
-        default:
-            output::errorMismatch(node.line);
-        break;        
-    }
+    auto check = toString(node.type);
+    if(check == "unknown")
+        output::errorMismatch(node.line);
 }
 
 void SemanticVisitor::visit(ast::ID &node){
@@ -150,4 +141,23 @@ void SemanticVisitor::visit(ast::Formals &node){
 void SemanticVisitor::visit(ast::Formal &node){
     auto table = globalSymbolTable.getTable();
     table->addParam(node.id->value,toString(node.type->type));
+    scopePrinter.emitVar(node.id->value,node.type->type,table->param_offset);
+}
+
+void SemanticVisitor::visit(ast::Statements &node){
+    for(const auto &statement : node.statements){
+        statement->accept(*this);
+    }
+}
+
+void SemanticVisitor::visit(ast::VarDecl &node){
+    current_context = Context::DECLARATION;
+    node.id->accept(*this);
+    node.type->accept(*this);
+    if(node.init_exp)
+        if
+    
+
+
+
 }
