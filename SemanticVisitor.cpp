@@ -54,13 +54,18 @@ void SemanticVisitor::visit(ast::FuncDecl &node){
         //continuation du SemanticVisitor pour la verification de la function
         node.return_type->accept(*this);
         node.id->accept(*this);
-        node.formals->accept(*this);
 
         //recuperation de la table des functions
-        std::shared_ptr<SymbolTable> functable = globalSymbolTable.getTable();    
+        std::shared_ptr<SymbolTable> functable = globalSymbolTable.getTable();  
 
         //ajout de la function a la symboltable des functions 
         functable->addFunc(node.id->value,parameters_name,returnType);
+
+        node.formals->accept(*this);
+
+          
+
+        
 
         //emission de la function dans le scope global
         scopePrinter.emitFunc(node.id->value,node.return_type->type,parameters);
@@ -146,6 +151,8 @@ void SemanticVisitor::visit(ast::ID &node){
 void SemanticVisitor::visit(ast::Formals &node){
     if(declaration_function){
         for(const auto &formal : node.formals){
+            if(globalSymbolTable.findEntry(formal->id->value))
+                output::errorDef(node.line,formal->id->value);
             std::string doublon = formal->id->value;
             for(const auto &check : node.formals){
                 if(check->id->value == doublon && check != formal)
