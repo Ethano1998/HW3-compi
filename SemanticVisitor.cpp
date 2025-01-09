@@ -327,9 +327,15 @@ void SemanticVisitor::visit(ast::Return &node){
     }
     else{
         node.exp->accept(*this);
-        if(node.return_type != check_assign(node.exp) || node.return_type == ast::BuiltInType::VOID){
+        if(node.return_type == ast::BuiltInType::VOID){
             output::errorMismatch(node.line);
         }
+        else if(node.return_type == ast::BuiltInType::INT){
+            if(!(node.exp->type == ast::BuiltInType::INT || node.exp->type == ast::BuiltInType::BYTE))
+                output::errorMismatch(node.line);
+        }
+        else if(node.return_type != check_assign(node.exp))
+            output::errorMismatch(node.line);
     }
 }
 
