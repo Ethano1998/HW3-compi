@@ -199,6 +199,7 @@ void SemanticVisitor::visit(ast::VarDecl &node){
     auto table = globalSymbolTable.getTable();
     table->addVar(node.id->value,toString(node.type->type));
     scopePrinter.emitVar(node.id->value,node.type->type,table->get_offset());
+    setContext(Context::REFERENCE_VAR);
 }
 
 void SemanticVisitor::visit(ast::Assign &node){
@@ -218,9 +219,10 @@ void SemanticVisitor::visit(ast::If &node){
     scopePrinter.beginScope();
     std::shared_ptr<SymbolTable> table = std::make_shared<SymbolTable>();
     globalSymbolTable.addTable(table);
-    if(node.condition->type !=  ast::BuiltInType::BOOL)
-        output::errorMismatch(node.line);
     node.condition->accept(*this);  //need to check if there is no problem with the condition
+    if(node.condition->type !=  ast::BuiltInType::BOOL){
+        output::errorMismatch(node.line);
+    }
     is_loop = true;
     node.then->return_type = node.return_type;
     node.then->accept(*this);
@@ -242,9 +244,10 @@ void SemanticVisitor::visit(ast::While &node){
     scopePrinter.beginScope();
     std::shared_ptr<SymbolTable> table = std::make_shared<SymbolTable>() ;
     globalSymbolTable.addTable(table);
-    if(node.condition->type !=  ast::BuiltInType::BOOL)
-        output::errorMismatch(node.line);
     node.condition->accept(*this);  //need to check if there is no problem with the condition
+    if(node.condition->type !=  ast::BuiltInType::BOOL){
+        output::errorMismatch(node.line);
+    }
     is_loop = true;
     node.body->return_type = node.return_type;
     node.body->accept(*this);
