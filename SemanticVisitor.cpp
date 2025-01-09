@@ -234,7 +234,7 @@ void SemanticVisitor::visit(ast::If &node){
     globalSymbolTable.addTable(table);
     node.condition->accept(*this);  //need to check if there is no problem with the condition
     if(node.condition->type !=  ast::BuiltInType::BOOL){
-        output::errorMismatch(node.line);
+        output::errorMismatch(node.condition->line);
     }
     node.then->return_type = node.return_type;
     node.then->accept(*this);
