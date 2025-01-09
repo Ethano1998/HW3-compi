@@ -22,7 +22,7 @@ namespace ast {
     ID::ID(const char *str) : Exp(), value(str) {}
 
     BinOp::BinOp(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right, BinOpType op)
-            : /*Exp(),*/ left(std::move(left)), right(std::move(right)), op(op) {}
+            : Exp(), left(std::move(left)), right(std::move(right)), op(op) {}
 
     RelOp::RelOp(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right, RelOpType op)
             : Exp(), left(std::move(left)), right(std::move(right)), op(op) {}
