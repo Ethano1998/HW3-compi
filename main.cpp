@@ -1,5 +1,6 @@
 #include "SemanticVisitor.hpp"
 #include "nodes.hpp"
+#include <iostream>
 
 extern int yyparse();
 
@@ -12,5 +13,7 @@ int main(){
     SemanticVisitor Visitor;
 
     program->accept(Visitor);
+
+    std::cout << Visitor.scopePrinter << std::endl;
 
 }
