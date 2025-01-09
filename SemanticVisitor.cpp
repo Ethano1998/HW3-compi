@@ -1,5 +1,6 @@
 #include "output.hpp"
 #include "SemanticVisitor.hpp"
+#include <iostream>
 
 ast::BuiltInType SemanticVisitor::check_assign(std::shared_ptr<ast::Exp> &node){
     return node->type;
@@ -283,7 +284,7 @@ void SemanticVisitor::visit(ast::ExpList &node){
 }
 
 void SemanticVisitor::visit(ast::BinOp &node){
-    node.left->accept(*this);
+    node.left->accept(*this); 
     node.right->accept(*this);
     if(!(node.left->type == ast::BuiltInType::INT || node.left->type == ast::BuiltInType::BYTE))
         output::errorMismatch(node.line);

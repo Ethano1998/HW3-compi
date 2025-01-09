@@ -67,7 +67,6 @@ namespace ast {
         // Value of the number
         int value;
 
-        BuiltInType type = INT;
 
         // Constructor that receives a C-style string that represents the number
         explicit Num(const char *str);
@@ -83,7 +82,6 @@ namespace ast {
         // Value of the number
         int value;
 
-        BuiltInType type = BYTE;
 
         // Constructor that receives a C-style (including b character) string that represents the number
         explicit NumB(const char *str);
@@ -99,7 +97,6 @@ namespace ast {
         // Value of the string
         std::string value;
 
-        BuiltInType type = STRING;
 
         // Constructor that receives a C-style string that represents the string *including quotes*
         explicit String(const char *str);
@@ -115,7 +112,6 @@ namespace ast {
         // Value of the boolean
         bool value;
 
-        BuiltInType type = BOOL;
 
         // Constructor that receives the boolean value
         explicit Bool(bool value);
@@ -131,7 +127,6 @@ namespace ast {
         // Name of the identifier
         std::string value;
 
-        BuiltInType type = VOID;
 
         // Constructor that receives a C-style string that represents the identifier
         explicit ID(const char *str);
@@ -151,7 +146,6 @@ namespace ast {
         // Operation
         BinOpType op;
 
-        BuiltInType type = INT;
 
         // Constructor that receives the left and right operands and the operation
         BinOp(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right, BinOpType op);
@@ -171,7 +165,6 @@ namespace ast {
         // Operation
         RelOpType op;
 
-        BuiltInType type = BOOL;
 
         // Constructor that receives the left and right operands and the operation
         RelOp(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right, RelOpType op);
@@ -187,7 +180,6 @@ namespace ast {
         // Operand
         std::shared_ptr<Exp> exp;
 
-        BuiltInType type = BOOL;
 
         // Constructor that receives the operand
         explicit Not(std::shared_ptr<Exp> exp);
@@ -205,7 +197,6 @@ namespace ast {
         // Right operand
         std::shared_ptr<Exp> right;
 
-        BuiltInType type = BOOL;
 
         // Constructor that receives the left and right operands
         And(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
@@ -223,7 +214,6 @@ namespace ast {
         // Right operand
         std::shared_ptr<Exp> right;
 
-        BuiltInType type = BOOL;
 
         // Constructor that receives the left and right operands
         Or(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right);
@@ -254,8 +244,6 @@ namespace ast {
         std::shared_ptr<Exp> exp;
         // Target type
         std::shared_ptr<Type> target_type;
-
-        BuiltInType type = VOID;
 
         // Constructor that receives the expression and the target type
         Cast(std::shared_ptr<Exp> exp, std::shared_ptr<Type> type);
@@ -296,7 +284,6 @@ namespace ast {
         // List of arguments as expressions
         std::shared_ptr<ExpList> args;
 
-        BuiltInType type = VOID;
 
         // Constructor that receives the function identifier and the list of arguments
         Call(std::shared_ptr<ID> func_id, std::shared_ptr<ExpList> args);
