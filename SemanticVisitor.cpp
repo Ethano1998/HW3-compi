@@ -322,3 +322,47 @@ void SemanticVisitor::visit(ast::RelOp &node){
     }
     node.type = ast::BuiltInType::BOOL;
 }
+
+void SemanticVisitor::visit(ast::Cast &node){
+    node.exp->accept(*this);
+    node.target_type->accept(*this);
+    if(node.exp->type != ast::BuiltInType::INT || node.exp->type != ast::BuiltInType::BYTE){
+        output::errorMismatch(node.line);
+    }
+    if(node.target_type->type != ast::BuiltInType::INT || node.target_type->type != ast::BuiltInType::BYTE){
+        output::errorMismatch(node.line);
+    }
+    node.type = node.target_type->type;
+}
+
+void SemanticVisitor::visit(ast::Not &node){
+    node.exp->accept(*this);
+    if(node.exp->type != ast::BuiltInType::BOOL){
+        output::errorMismatch(node.line);
+    }
+    node.type = ast::BuiltInType::BOOL;
+}
+
+void SemanticVisitor::visit(ast::And &node){
+    node.left->accept(*this);
+    node.right->accept(*this);
+    if(node.left->type != ast::BuiltInType::BOOL){
+        output::errorMismatch(node.line);
+    }
+    if(node.right->type != ast::BuiltInType::BOOL){
+        output::errorMismatch(node.line);
+    }
+    node.type = ast::BuiltInType::BOOL;
+}
+
+void SemanticVisitor::visit(ast::Or &node){
+    node.left->accept(*this);
+    node.right->accept(*this);
+    if(node.left->type != ast::BuiltInType::BOOL){
+        output::errorMismatch(node.line);
+    }
+    if(node.right->type != ast::BuiltInType::BOOL){
+        output::errorMismatch(node.line);
+    }
+    node.type = ast::BuiltInType::BOOL;
+}
