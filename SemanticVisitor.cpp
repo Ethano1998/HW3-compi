@@ -281,6 +281,8 @@ void SemanticVisitor::visit(ast::Call &node){
     //now we re checking the types of the arguments
     std::vector<std::string> expectedtypes = entry->paramTypes;
     std::vector<std::shared_ptr<ast::Exp>> types = node.args->exps;
+    if(expectedtypes.size() != types.size())
+        output::errorPrototypeMismatch(node.line,node.func_id->value,expectedtypes);
     current_context = Context::REFERENCE_VAR;
     node.args->accept(*this);
     for(int i = 0; i < expectedtypes.size(); i++){
