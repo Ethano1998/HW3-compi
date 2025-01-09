@@ -182,8 +182,11 @@ void SemanticVisitor::visit(ast::VarDecl &node){
     if(node.init_exp){
         node.init_exp->accept(*this);
         ast::BuiltInType type_check = check_assign(node.init_exp);
-        if(node.type->type != type_check)
+        if(node.type->type == ast::BuiltInType::INT && !(type_check == ast::BuiltInType::INT || type_check == ast::BuiltInType::BYTE))
             output::errorMismatch(node.line);
+        else if(node.type->type != ast::BuiltInType::INT && (node.type->type != type_check))
+            output::errorMismatch(node.line);    
+
     }
 }
 
@@ -194,7 +197,9 @@ void SemanticVisitor::visit(ast::Assign &node){
     ast::BuiltInType type_check = check_assign(node.exp);
     std::string check = toString(type_check);
     auto variable = std::dynamic_pointer_cast<VarSymbolEntry>(globalSymbolTable.findEntry(node.id->value));
-    if(check != variable->type)
+    if(variable->type == "int" && !(type_check == ast::BuiltInType::INT || type_check == ast::BuiltInType::BYTE))
+            output::errorMismatch(node.line);
+    else if( variable->type != "int" && (check != variable->type))
         output::errorMismatch(node.line);   
 }
 
