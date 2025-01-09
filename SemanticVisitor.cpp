@@ -229,10 +229,8 @@ void SemanticVisitor::visit(ast::If &node){
     if(node.condition->type !=  ast::BuiltInType::BOOL){
         output::errorMismatch(node.line);
     }
-    is_loop = true;
     node.then->return_type = node.return_type;
     node.then->accept(*this);
-    is_loop = false;
     scopePrinter.endScope();
     globalSymbolTable.popTable();
     if(node.otherwise){
@@ -253,21 +251,21 @@ void SemanticVisitor::visit(ast::While &node){
     node.condition->accept(*this);  //need to check if there is no problem with the condition
     if(node.condition->type !=  ast::BuiltInType::BOOL)
         output::errorMismatch(node.line);
-    is_loop++;
+    globalSymbolTable.is_loop++;
     node.body->return_type = node.return_type;
     node.body->accept(*this);
-    is_loop--;
     scopePrinter.endScope();
     globalSymbolTable.popTable();
+    globalSymbolTable.is_loop--;
 }
 
 void SemanticVisitor::visit(ast::Break &node){
-    if(is_loop == 0)
+    if(globalSymbolTable.is_loop == 0)
         output::errorUnexpectedBreak(node.line);
 }
 
 void SemanticVisitor::visit(ast::Continue &node){
-    if(is_loop == 0)
+    if(globalSymbolTable.is_loop == 0)
         output::errorUnexpectedContinue(node.line);
 }
 

@@ -39,8 +39,6 @@ public:
 
     GlobalSymbolTable globalSymbolTable;
 
-    int is_loop = 0;
-
     void setContext(Context context){
         current_context = context;
     }

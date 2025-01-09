@@ -79,6 +79,7 @@ class SymbolTable {
 class GlobalSymbolTable {
     std::vector<std::shared_ptr<SymbolTable>> tables;
     public:
+    int is_loop = 0;
     GlobalSymbolTable(){
         std::shared_ptr<SymbolTable> table = std::make_shared<SymbolTable>();
         table->addFunc("print", std::vector<std::string>{"STRING"}, "void");
