@@ -330,10 +330,10 @@ void SemanticVisitor::visit(ast::Bool &node){
 void SemanticVisitor::visit(ast::RelOp &node){
     node.left->accept(*this);
     node.right->accept(*this);
-    if(node.left->type != ast::BuiltInType::INT || node.left->type != ast::BuiltInType::BYTE){
+    if(!(node.left->type == ast::BuiltInType::INT || node.left->type == ast::BuiltInType::BYTE)){
         output::errorMismatch(node.line);
     }
-    if(node.right->type != ast::BuiltInType::INT || node.right->type != ast::BuiltInType::BYTE){
+    if(!(node.right->type == ast::BuiltInType::INT || node.right->type == ast::BuiltInType::BYTE)){
         output::errorMismatch(node.line);
     }
     node.type = ast::BuiltInType::BOOL;
