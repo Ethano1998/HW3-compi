@@ -81,8 +81,8 @@ class GlobalSymbolTable {
     public:
     GlobalSymbolTable(){
         std::shared_ptr<SymbolTable> table = std::make_shared<SymbolTable>();
-        table->addFunc("print", std::vector<std::string>{"string"}, "void");
-        table->addFunc("printi", std::vector<std::string>{"int"}, "void");
+        table->addFunc("print", std::vector<std::string>{"STRING"}, "void");
+        table->addFunc("printi", std::vector<std::string>{"INT"}, "void");
         tables.push_back(table);
     };
 

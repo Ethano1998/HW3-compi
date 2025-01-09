@@ -18,7 +18,7 @@ void SemanticVisitor::visit(ast::Funcs &node){
     std::shared_ptr<SymbolEntry> main = functable->findEntry("main");
     if(!main)
         output::errorMainMissing();
-    else if(std::dynamic_pointer_cast<FuncSymbolEntry>(main)->returnType != "void")
+    else if(std::dynamic_pointer_cast<FuncSymbolEntry>(main)->returnType != "VOID")
         output::errorMainMissing();
     else if(std::dynamic_pointer_cast<FuncSymbolEntry>(main)->paramTypes.size() != 0)
         output::errorMainMissing();
@@ -211,9 +211,9 @@ void SemanticVisitor::visit(ast::Assign &node){
     ast::BuiltInType type_check = check_assign(node.exp);
     std::string check = toString(type_check);
     auto variable = std::dynamic_pointer_cast<VarSymbolEntry>(globalSymbolTable.findEntry(node.id->value));
-    if(variable->type == "int" && !(type_check == ast::BuiltInType::INT || type_check == ast::BuiltInType::BYTE))
+    if(variable->type == "INT" && !(type_check == ast::BuiltInType::INT || type_check == ast::BuiltInType::BYTE))
             output::errorMismatch(node.line);
-    else if( variable->type != "int" && (check != variable->type))
+    else if( variable->type != "INT" && (check != variable->type))
         output::errorMismatch(node.line);   
 }
 

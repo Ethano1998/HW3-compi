@@ -48,30 +48,30 @@ public:
     std::string toString(ast::BuiltInType type) {
         switch (type) {
             case ast::BuiltInType::INT:
-                return "int";
+                return "INT";
             case ast::BuiltInType::BOOL:
-                return "bool";
+                return "BOOL";
             case ast::BuiltInType::BYTE:
-                return "byte";
+                return "BYTE";
             case ast::BuiltInType::VOID:
-                return "void";
+                return "VOID";
             case ast::BuiltInType::STRING:
-                return "string";
+                return "STRING";
             default:
                 return "unknown";
         }
     }
 
     ast::BuiltInType toBuiltInType(const std::string &type) {
-        if (type == "int") {
+        if (type == "INT") {
             return ast::BuiltInType::INT;
-        } else if (type == "bool") {
+        } else if (type == "BOOL") {
             return ast::BuiltInType::BOOL;
-        } else if (type == "byte") {
+        } else if (type == "BYTE") {
             return ast::BuiltInType::BYTE;
-        } else if (type == "void") {
+        } else if (type == "VOID") {
             return ast::BuiltInType::VOID;
-        } else if (type == "string") {
+        } else if (type == "STRING") {
             return ast::BuiltInType::STRING;
         }
     }
