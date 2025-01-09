@@ -11,7 +11,15 @@ void SemanticVisitor::visit(ast::Funcs &node){
     for (const auto &func : node.funcs){
         func->accept(*this);
     }
-
+    std::shared_ptr<SymbolTable> functable = globalSymbolTable.getTable();
+    std::shared_ptr<SymbolEntry> main = functable->findEntry("main");
+    if(!main)
+        output::errorMainMissing();
+    else if(std::dynamic_pointer_cast<FuncSymbolEntry>(main)->returnType != "int")
+        output::errorMainMissing();
+    else if(std::dynamic_pointer_cast<FuncSymbolEntry>(main)->paramTypes.size() != 0)
+        output::errorMainMissing();
+    
     //continuation de la verification semantique apres avoir declaree toute les fonctions
     declaration_function = false;
     for (const auto &func : node.funcs){
@@ -278,4 +286,24 @@ void SemanticVisitor::visit(ast::Return &node){
             output::errorMismatch(node.line);
         }
     }
+}
+
+void SemanticVisitor::visit(ast::Num &node){
+    node.type = ast::BuiltInType::INT;
+}
+
+void SemanticVisitor::visit(ast::NumB &node){
+    node.type = ast::BuiltInType::BYTE;
+}
+
+void SemanticVisitor::visit(ast::String &node){
+    node.type = ast::BuiltInType::STRING;
+}
+
+void SemanticVisitor::visit(ast::Bool &node){
+    node.type = ast::BuiltInType::BOOL;
+}
+
+void SemanticVisitor::visit(ast::RelOp &node){
+    
 }
