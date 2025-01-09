@@ -125,12 +125,10 @@ void SemanticVisitor::visit(ast::ID &node){
             //verification si la variable est declaree en tant que fonction
             if(std::dynamic_pointer_cast<FuncSymbolEntry>(functionTable->findEntry(node.value)))
                 output::errorDefAsFunc(node.line,node.value);
-
-            //recuperation de la table dans symbol table
-            std::shared_ptr<SymbolTable> Table = globalSymbolTable.getTable();
-
+            
+          
             //verification si variable est declaree
-            if(!(Table->findEntry(node.value)))
+            if(!(globalSymbolTable.findEntry(node.value)))
                 output::errorUndef(node.line,node.value);
             break;    
         }       
@@ -186,15 +184,15 @@ void SemanticVisitor::visit(ast::VarDecl &node){
         node.init_exp->accept(*this);
         ast::BuiltInType type_check = check_assign(node.init_exp);
         if(node.type->type == ast::BuiltInType::INT && !(type_check == ast::BuiltInType::INT || type_check == ast::BuiltInType::BYTE)){
-            //printf("visit vardecl 1");
             output::errorMismatch(node.line);
         }    
         else if(node.type->type != ast::BuiltInType::INT && (node.type->type != type_check)){
-            //printf("visit vardecl 2");
             output::errorMismatch(node.line);    
         }    
-
     }
+    auto table = globalSymbolTable.getTable();
+    table->addVar(node.id->value,toString(node.type->type));
+    scopePrinter.emitVar(node.id->value,node.type->type,table->get_offset());
 }
 
 void SemanticVisitor::visit(ast::Assign &node){

@@ -29,9 +29,9 @@ public:
 
 class SymbolTable {
     int global_offset = 0;
-    std::vector<std::shared_ptr<SymbolEntry>> entries;
 
     public:
+    std::vector<std::shared_ptr<SymbolEntry>> entries;
     int param_offset = 0;
     int scope_offset = 0;
 
