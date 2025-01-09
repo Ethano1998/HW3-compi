@@ -15,7 +15,7 @@ void SemanticVisitor::visit(ast::Funcs &node){
     std::shared_ptr<SymbolEntry> main = functable->findEntry("main");
     if(!main)
         output::errorMainMissing();
-    else if(std::dynamic_pointer_cast<FuncSymbolEntry>(main)->returnType != "int")
+    else if(std::dynamic_pointer_cast<FuncSymbolEntry>(main)->returnType != "void")
         output::errorMainMissing();
     else if(std::dynamic_pointer_cast<FuncSymbolEntry>(main)->paramTypes.size() != 0)
         output::errorMainMissing();
@@ -293,6 +293,8 @@ void SemanticVisitor::visit(ast::Num &node){
 }
 
 void SemanticVisitor::visit(ast::NumB &node){
+    if(node.value > 255)
+        output::errorByteTooLarge(node.line,node.value);
     node.type = ast::BuiltInType::BYTE;
 }
 
@@ -305,5 +307,13 @@ void SemanticVisitor::visit(ast::Bool &node){
 }
 
 void SemanticVisitor::visit(ast::RelOp &node){
-    
+    node.left->accept(*this);
+    node.right->accept(*this);
+    if(node.left->type != ast::BuiltInType::INT || node.left->type != ast::BuiltInType::BYTE){
+        output::errorMismatch(node.line);
+    }
+    if(node.right->type != ast::BuiltInType::INT || node.right->type != ast::BuiltInType::BYTE){
+        output::errorMismatch(node.line);
+    }
+    node.type = ast::BuiltInType::BOOL;
 }
