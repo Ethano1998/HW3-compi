@@ -8,6 +8,8 @@ ast::BuiltInType SemanticVisitor::check_assign(std::shared_ptr<ast::Exp> &node){
 
 void SemanticVisitor::visit(ast::Funcs &node){
     //appel du visitor sur toute les functions pour les declarer
+    scopePrinter.emitFunc("print", ast::BuiltInType::VOID, {ast::BuiltInType::STRING});
+    scopePrinter.emitFunc("printi", ast::BuiltInType::VOID, {ast::BuiltInType::INT});
     declaration_function = true;
     for (const auto &func : node.funcs){
         func->accept(*this);
@@ -197,8 +199,8 @@ void SemanticVisitor::visit(ast::VarDecl &node){
         }    
     }
     auto table = globalSymbolTable.getTable();
-    table->addVar(node.id->value,toString(node.type->type));
     scopePrinter.emitVar(node.id->value,node.type->type,table->get_offset());
+    table->addVar(node.id->value,toString(node.type->type));
     setContext(Context::REFERENCE_VAR);
 }
 

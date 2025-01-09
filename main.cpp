@@ -14,6 +14,6 @@ int main(){
 
     program->accept(Visitor);
 
-    std::cout << Visitor.scopePrinter << std::endl;
+    std::cout << Visitor.scopePrinter;
 
 }
