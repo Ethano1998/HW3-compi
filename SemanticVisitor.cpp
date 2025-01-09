@@ -244,9 +244,9 @@ void SemanticVisitor::visit(ast::While &node){
     scopePrinter.beginScope();
     std::shared_ptr<SymbolTable> table = std::make_shared<SymbolTable>() ;
     globalSymbolTable.addTable(table);
+    node.condition->accept(*this);  //need to check if there is no problem with the condition
     if(node.condition->type !=  ast::BuiltInType::BOOL)
         output::errorMismatch(node.line);
-    node.condition->accept(*this);  //need to check if there is no problem with the condition
     is_loop = true;
     node.body->return_type = node.return_type;
     node.body->accept(*this);
