@@ -185,11 +185,11 @@ void SemanticVisitor::visit(ast::VarDecl &node){
         node.init_exp->accept(*this);
         ast::BuiltInType type_check = check_assign(node.init_exp);
         if(node.type->type == ast::BuiltInType::INT && !(type_check == ast::BuiltInType::INT || type_check == ast::BuiltInType::BYTE)){
-            printf("visit type");
+            printf("visit vardecl 1");
             output::errorMismatch(node.line);
         }    
         else if(node.type->type != ast::BuiltInType::INT && (node.type->type != type_check)){
-            printf("visit type");
+            printf("visit vardecl 2");
             output::errorMismatch(node.line);    
         }    
 
