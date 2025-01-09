@@ -87,7 +87,7 @@ void SemanticVisitor::visit(ast::Type &node){
 //verification du type
     auto check = toString(node.type);
     if(check == "unknown"){
-        printf("visit type");
+        //printf("visit type");
         output::errorMismatch(node.line);
     }    
 }
@@ -185,11 +185,11 @@ void SemanticVisitor::visit(ast::VarDecl &node){
         node.init_exp->accept(*this);
         ast::BuiltInType type_check = check_assign(node.init_exp);
         if(node.type->type == ast::BuiltInType::INT && !(type_check == ast::BuiltInType::INT || type_check == ast::BuiltInType::BYTE)){
-            printf("visit vardecl 1");
+            //printf("visit vardecl 1");
             output::errorMismatch(node.line);
         }    
         else if(node.type->type != ast::BuiltInType::INT && (node.type->type != type_check)){
-            printf("visit vardecl 2");
+            //printf("visit vardecl 2");
             output::errorMismatch(node.line);    
         }    
 
@@ -285,8 +285,10 @@ void SemanticVisitor::visit(ast::ExpList &node){
 void SemanticVisitor::visit(ast::BinOp &node){
     node.left->accept(*this);
     node.right->accept(*this);
-    if(!(node.left->type == ast::BuiltInType::INT || node.left->type == ast::BuiltInType::BYTE) || !(node.right->type == ast::BuiltInType::INT || node.right->type == ast::BuiltInType::BYTE))
+    if(!(node.left->type == ast::BuiltInType::INT || node.left->type == ast::BuiltInType::BYTE) || !(node.right->type == ast::BuiltInType::INT || node.right->type == ast::BuiltInType::BYTE)){
+        printf("error binop");
         output::errorMismatch(node.line);
+    }
     if(node.left->type == ast::BuiltInType::INT || node.right->type == ast::BuiltInType::INT)
         node.type = ast::BuiltInType::INT;
     else
