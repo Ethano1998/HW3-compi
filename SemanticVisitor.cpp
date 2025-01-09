@@ -277,6 +277,7 @@ void SemanticVisitor::visit(ast::Call &node){
     std::string returnType = entry->returnType;
     node.type = toBuiltInType(returnType);
     //now we re checking the types of the arguments
+    std::string name = node.func_id->value;
     std::vector<std::string> expectedtypes = entry->paramTypes;
     std::vector<std::shared_ptr<ast::Exp>> types = node.args->exps;
     if(expectedtypes.size() != types.size())
@@ -284,6 +285,8 @@ void SemanticVisitor::visit(ast::Call &node){
     current_context = Context::REFERENCE_VAR;
     node.args->accept(*this);
     for(int i = 0; i < expectedtypes.size(); i++){
+        if(name == "printi" && expectedtypes[i] == "INT" && types[i]->type == ast::BuiltInType::BYTE)
+            continue;
         if(expectedtypes[i] != toString(types[i]->type))
             output::errorPrototypeMismatch(node.line,node.func_id->value,expectedtypes);
     }
