@@ -154,7 +154,7 @@ namespace ast {
         BuiltInType type = INT;
 
         // Constructor that receives the left and right operands and the operation
-        BinOp(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right, BinOpType op): left(std::move(left)), right(std::move(right)), op(op) {};
+        BinOp(std::shared_ptr<Exp> left, std::shared_ptr<Exp> right, BinOpType op);
 
         void accept(Visitor &visitor) override {
             visitor.visit(*this);
