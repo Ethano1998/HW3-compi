@@ -277,6 +277,15 @@ void SemanticVisitor::visit(ast::ExpList &node){
 }
 
 void SemanticVisitor::visit(ast::BinOp &node){
+    node.left->accept(*this);
+    node.right->accept(*this);
+    if(!(node.left->type == ast::BuiltInType::INT || node.left->type == ast::BuiltInType::BYTE) || !(node.right->type == ast::BuiltInType::INT || node.right->type == ast::BuiltInType::BYTE))
+        output::errorMismatch(node.line);
+    if(node.left->type == ast::BuiltInType::INT || node.right->type == ast::BuiltInType::INT)
+        node.type = ast::BuiltInType::INT;
+    else
+        node.type = ast::BuiltInType::BYTE;
+
 }
 
 void SemanticVisitor::visit(ast::Return &node){
