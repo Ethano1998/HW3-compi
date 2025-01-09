@@ -176,11 +176,14 @@ void SemanticVisitor::visit(ast::Statements &node){
         }
     } else{
         scopePrinter.beginScope();
+        std::shared_ptr<SymbolTable> table = std::make_shared<SymbolTable>() ;
+        globalSymbolTable.addTable(table);
         for(const auto &statement : node.statements){
             statement->return_type = node.return_type;
             statement->accept(*this);
         }
         scopePrinter.endScope();
+        globalSymbolTable.popTable();
     }    
 }
 
@@ -189,6 +192,7 @@ void SemanticVisitor::visit(ast::VarDecl &node){
     node.id->accept(*this);
     node.type->accept(*this);
     if(node.init_exp){
+        setContext(Context::REFERENCE_VAR);
         node.init_exp->accept(*this);
         ast::BuiltInType type_check = check_assign(node.init_exp);
         if(node.type->type == ast::BuiltInType::INT && !(type_check == ast::BuiltInType::INT || type_check == ast::BuiltInType::BYTE)){
@@ -352,10 +356,10 @@ void SemanticVisitor::visit(ast::RelOp &node){
 void SemanticVisitor::visit(ast::Cast &node){
     node.exp->accept(*this);
     node.target_type->accept(*this);
-    if(node.exp->type != ast::BuiltInType::INT || node.exp->type != ast::BuiltInType::BYTE){
+    if(!(node.exp->type == ast::BuiltInType::INT || node.exp->type == ast::BuiltInType::BYTE)){
         output::errorMismatch(node.line);
     }
-    if(node.target_type->type != ast::BuiltInType::INT || node.target_type->type != ast::BuiltInType::BYTE){
+    if(!(node.target_type->type == ast::BuiltInType::INT || node.target_type->type == ast::BuiltInType::BYTE)){
         output::errorMismatch(node.line);
     }
     node.type = node.target_type->type;
