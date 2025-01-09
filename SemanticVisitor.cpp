@@ -68,6 +68,7 @@ void SemanticVisitor::visit(ast::FuncDecl &node){
     //debut de la scope de la function
     scopePrinter.beginScope();
 
+    setContext(Context::REFERENCE_VAR);
     //creation de la table pour le scope de la function
     std::shared_ptr<SymbolTable> func_table = std::make_shared<SymbolTable>() ;
     globalSymbolTable.addTable(func_table);
@@ -130,6 +131,11 @@ void SemanticVisitor::visit(ast::ID &node){
             //verification si variable est declaree
             if(!(globalSymbolTable.findEntry(node.value)))
                 output::errorUndef(node.line,node.value);
+            else{
+                auto get_type = std::dynamic_pointer_cast<VarSymbolEntry>(globalSymbolTable.findEntry(node.value))->type;
+                node.type = toBuiltInType(get_type);
+            }    
+                
             break;    
         }       
     }
