@@ -84,10 +84,12 @@ void SemanticVisitor::visit(ast::FuncDecl &node){
 }
 
 void SemanticVisitor::visit(ast::Type &node){
-    //verification du type
+//verification du type
     auto check = toString(node.type);
-    if(check == "unknown")
+    if(check == "unknown"){
+        printf("visit type");
         output::errorMismatch(node.line);
+    }    
 }
 
 void SemanticVisitor::visit(ast::ID &node){
@@ -182,10 +184,14 @@ void SemanticVisitor::visit(ast::VarDecl &node){
     if(node.init_exp){
         node.init_exp->accept(*this);
         ast::BuiltInType type_check = check_assign(node.init_exp);
-        if(node.type->type == ast::BuiltInType::INT && !(type_check == ast::BuiltInType::INT || type_check == ast::BuiltInType::BYTE))
+        if(node.type->type == ast::BuiltInType::INT && !(type_check == ast::BuiltInType::INT || type_check == ast::BuiltInType::BYTE)){
+            printf("visit type");
             output::errorMismatch(node.line);
-        else if(node.type->type != ast::BuiltInType::INT && (node.type->type != type_check))
+        }    
+        else if(node.type->type != ast::BuiltInType::INT && (node.type->type != type_check)){
+            printf("visit type");
             output::errorMismatch(node.line);    
+        }    
 
     }
 }
